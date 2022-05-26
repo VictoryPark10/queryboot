@@ -123,6 +123,12 @@
                     }
                 })
             }
+
+            document.getElementById("result").onclick = function() {
+                document.getElementById("result").select();
+                alert("Copy Clipboard!");
+                document.execCommand('copy');
+            }
         </script>
     </body>
 </html>
