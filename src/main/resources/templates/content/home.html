@@ -42,9 +42,17 @@
         <!-- Masthead-->
         <header class="masthead">
             <div class="container">
-                <div class="masthead-subheading">Welcome Bring Me Query Web Site!</div>
-                <!--div class="masthead-heading text-uppercase">Input your Query and Parameters !</div-->
+                <div class="masthead-subheading">웃으면서 일하자 :)</div>
                 <div class="row align-items-stretch mb-5">
+<!--                    <div class="col-md-6">-->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <textarea class="form-control input-text-area" id="beforeData" type="text" placeholder="Input Data" data-sb-validations="required" rows="10"></textarea>
+                            <div class="invalid-feedback" data-sb-feedback="query: required">Data is empty.</div>
+                        </div>
+                        로그에서 쿼리와 파라미터 라인을 한번에 붙여넣기 해보세요 !!
+                    </div>
+                    <!--
                     <div class="col-md-6">
                         <div class="form-group">
                             <textarea class="form-control input-text-area" id="query" type="text" placeholder="Input Query" data-sb-validations="required" rows="10"></textarea>
@@ -57,11 +65,14 @@
                             <div class="invalid-feedback" data-sb-feedback="params: required">Parameters are required.</div>
                         </div>
                     </div>
+                    -->
                 </div>
                 <hr>
                 <button class="btn btn-primary btn-xl text-uppercase" onclick="combine();">Combine</button>
                 <hr>
-                <textarea class="form-control" id="result" type="text"></textarea>
+                <div class="col-md-12">
+                    <textarea class="form-control" id="result" type="text" rows="10"></textarea>
+                </div>
             </div>
         </header>
         <!-- Footer-->
@@ -97,8 +108,9 @@
         <script>
             function combine() {
                 let combineParams = {
-                    beforeQuery   : $('#query').val(),
-                    beforeParams  : $('#params').val()
+                    beforeData  : $('#beforeData').val()
+                    // beforeQuery   : $('#query').val(),
+                    // beforeParams  : $('#params').val()
                 };
 
                 $.ajax({
@@ -124,10 +136,32 @@
                 })
             }
 
-            document.getElementById("result").onclick = function() {
-                document.getElementById("result").select();
-                alert("Copy Clipboard!");
-                document.execCommand('copy');
+            function unsecuredCopyToClipboard(element) {
+                element.focus();
+                element.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Seccessfully Copy to Clipboard ! (u)');
+                } catch (err) {
+                    alert('Failure Copy to Clipboard ! ' + err);
+                }
+            }
+
+            document.getElementById("result").onclick = () => {
+                const element = document.getElementById("result");
+
+                if (window.isSecureContext && navigator.clipboard) {
+                    window.navigator.clipboard.writeText(element.value)
+                        .then(
+                            () => alert("Successfully Copy to Clipboard ! (s)")
+                        )
+                        .catch(err => {
+                            console.log('Failure Copy to Clipboard ! ' + err);
+                            unsecuredCopyToClipboard(element);
+                        })
+                } else {
+                    unsecuredCopyToClipboard(element);
+                }
             }
         </script>
     </body>

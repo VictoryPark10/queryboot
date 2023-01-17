@@ -1,6 +1,5 @@
 package com.vicsoft.queryboot.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -45,16 +44,23 @@ public class HomeController {
         Map<String, Object> responseMap = new HashMap<>();
 
         try {
-            String beforeQuery = (String) combineParams.get("beforeQuery");
-            String beforeParams = (String) combineParams.get("beforeParams");
-            beforeParams = beforeParams.replaceAll(System.getProperty("line.separator").toString(), "");
+            String[] dummy = ((String) combineParams.get("beforeData")).split("Preparing:");
+            String[] dummy2 = dummy[1].split("Parameters:");
+            String[] dummy3 = dummy2[0].split("\\[2");
+
+            String beforeQuery = dummy3[0].trim();
+            String beforeParams = dummy2[1].trim();
+
+//            String beforeQuery = (String) combineParams.get("beforeQuery");
+//            String beforeParams = (String) combineParams.get("beforeParams");
+            beforeParams = beforeParams.replaceAll(System.getProperty("line.separator"), "");
             beforeParams = beforeParams.replaceAll("\\(String\\), ", "(String)^")
                     .replaceAll("\\(Integer\\), ", "(Integer)^")
                     .replaceAll("\\(Long\\), ", "(Long)^")
                     .replaceAll("null, ", "null^");
 
             String[] params = beforeParams.split("\\^");
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (String param : params) {
                 if (param.endsWith("(String)")) {
                     param = param.replace("(String)", "");
@@ -62,17 +68,17 @@ public class HomeController {
                 }
                 if (param.endsWith("(Integer)")) {
                     param = param.replace("(Integer)", "");
-                    sb.append("'").append(param).append("'");
+                    sb.append(param);
                 }
                 if (param.endsWith("(Long)")) {
                     param = param.replace("(Long)", "");
-                    sb.append("'").append(param).append("'");
+                    sb.append(param);
                 }
                 beforeQuery = beforeQuery.replaceFirst("\\?", sb.toString());
                 sb.setLength(0);
             }
 
-            logger.info("\nComplete Query :\n{}", beforeQuery);
+            logger.info("\nComplete Query : [{}]\n", beforeQuery);
 
             responseMap.put("result", true);
             responseMap.put("completeQuery", beforeQuery);
