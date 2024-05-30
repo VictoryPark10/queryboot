@@ -25,7 +25,7 @@ You can use at [(String), (Integer), (Long)] Parameters
 at Spring Log (spring.jpa.properties.hibernate.use_sql_comment=off, logging.level.org.hibernate.type=trace)
 
 
-Hibernate: select A.reg_date from TBL_HELLO where reg_date between ? and ?
+Hibernate: select A.reg_date from TBL_HELLO A where A.reg_date between ? and ?
 
 2024-05-30 11:09:00.000 TRACE 12345 --- [nio-8080-exec-3] o.h.type.descriptor.sql.BasicBinder : binding parameter [1] as [VARCHAR] - [2024-05-01]
 
