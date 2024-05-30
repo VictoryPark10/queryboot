@@ -1,7 +1,14 @@
 package com.vicsoft.queryboot.controller;
 
+import com.vicsoft.queryboot.util.QueryUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,15 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Controller
 public class HomeController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private QueryUtils queryUtils;
 
     @RequestMapping(value = "/home", method = { RequestMethod.GET, RequestMethod.POST })
     public ModelAndView goHome(HttpServletRequest request) {
@@ -38,9 +42,9 @@ public class HomeController {
         return mav;
     }
 
-    @RequestMapping(value = "/combine", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/combine/mybatis", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public Map<String, Object> combineQuery(Model model, HttpServletRequest request, @RequestBody Map<String, Object> combineParams) {
+    public Map<String, Object> combineMybatisQuery(Model model, HttpServletRequest request, @RequestBody Map<String, Object> combineParams) {
         Map<String, Object> responseMap = new HashMap<>();
 
         try {
@@ -87,6 +91,41 @@ public class HomeController {
         }
 
         return responseMap;
+    }
+
+    @RequestMapping(value = "/combine/hibernate", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public Map<String, Object> combineHibernateQuery(Model model, HttpServletRequest request, @RequestBody Map<String, Object> combineParams) {
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("result", false);
+
+        try {
+            String beforeData = ((String) combineParams.get("beforeData"));
+
+            // Extract the query from the log
+            String query = queryUtils.extractQueryFromLog(beforeData);
+            if (query == null) {
+                responseMap.put("completeQuery", "Query not found in the log");
+                return responseMap;
+            }
+
+            // Extract parameters from the log
+            List<String> params = queryUtils.extractParametersFromLog(beforeData);
+            if (params == null) {
+                responseMap.put("completeQuery", "Parameter not found in the log");
+                return responseMap;
+            }
+
+            // Replace the placeholders with the actual parameters
+            String formattedQuery = queryUtils.replacePlaceholders(query, params);
+
+            responseMap.put("result", true);
+            responseMap.put("completeQuery", formattedQuery);
+
+            return responseMap;
+        } catch (Exception e) {
+            return responseMap;
+        }
     }
 
 }

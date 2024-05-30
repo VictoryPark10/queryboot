@@ -1,0 +1,34 @@
+
+# server port
+server:
+  port: 59267
+
+# undertow
+  undertow:
+    threads:
+      io: 16
+      worker: 800
+    accesslog:
+      enabled: true
+      dir: ./accesslog/
+      pattern: '%h %l %u %t "%r" %s %b "%{i,Referer}" "%{i,User-Agent}"'
+      rotate: true
+      prefix: access_log
+      suffix: .log
+
+# when static resource changed, auto load
+spring:
+  devtools:
+    livereload:
+      enabled: true
+
+# thymeleaf path
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+# thymeleaf cache settings
+    cache: true
+
+# check templates
+    check-template-location: true
