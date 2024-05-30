@@ -18,7 +18,6 @@ SELECT * FROM TBL_HISTORY WHERE SND_DATE BETWEEN '20231112000000' AND '202312122
 You can use at [(String), (Integer), (Long)] Parameters
 </pre>
 
-
 2. Hibernate
 
 <pre>
@@ -26,7 +25,7 @@ You can use at [(String), (Integer), (Long)] Parameters
 at Spring Log (spring.jpa.properties.hibernate.use_sql_comment=off, logging.level.org.hibernate.type=trace)
 
 
-Hibernate: select A.reg\_date from TBL\_HELLO where reg\_date between ? and ?
+Hibernate: select A.reg_date from TBL_HELLO where reg_date between ? and ?
 
 2024-05-30 11:09:00.000 TRACE 12345 --- [nio-8080-exec-3] o.h.type.descriptor.sql.BasicBinder : binding parameter [1] as [VARCHAR] - [2024-05-01]
 
