@@ -28,7 +28,6 @@ Hibernate: select A.reg_date from TBL_HELLO A where A.reg_date between ? and ?
 2024-05-30 11:09:00.001 TRACE 12345 --- [nio-8080-exec-3] o.h.type.descriptor.sql.BasicBinder : binding parameter [2] as [VARCHAR] - [2024-05-30]
 
 Copy this 3 lines (Query, Parameters) and click 'Combine Hibernate' button !
-
 And this is result
 
 select A.reg_date from TBL_HELLO where reg_date between '2024-05-01' and '2024-05-30'
