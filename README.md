@@ -30,7 +30,7 @@ Hibernate: select A.reg_date from TBL_HELLO A where A.reg_date between ? and ?
 Copy this 3 lines (Query, Parameters) and click 'Combine Hibernate' button !
 And this is result
 
-select A.reg_date from TBL_HELLO where reg_date between '2024-05-01' and '2024-05-30'
+select A.reg_date from TBL_HELLO A where A.reg_date between '2024-05-01' and '2024-05-30'
 
 You can use at ['VARCHAR', 'CHAR', 'DOUBLE', 'BIGINT', 'BOOLEAN', etc...] Parameters
 </pre>
