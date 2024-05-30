@@ -53,17 +53,8 @@ public class HomeController {
             String[] dummy3 = dummy2[0].split("\\[2");
 
             String beforeQuery = dummy3[0].trim();
-            String beforeParams = dummy2[1].trim();
+            String[] params = queryUtils.getMyBatisParameters(dummy2);
 
-//            String beforeQuery = (String) combineParams.get("beforeQuery");
-//            String beforeParams = (String) combineParams.get("beforeParams");
-            beforeParams = beforeParams.replaceAll(System.getProperty("line.separator"), "");
-            beforeParams = beforeParams.replaceAll("\\(String\\), ", "(String)^")
-                    .replaceAll("\\(Integer\\), ", "(Integer)^")
-                    .replaceAll("\\(Long\\), ", "(Long)^")
-                    .replaceAll("null, ", "null^");
-
-            String[] params = beforeParams.split("\\^");
             StringBuilder sb = new StringBuilder();
             for (String param : params) {
                 if (param.endsWith("(String)")) {
@@ -100,7 +91,7 @@ public class HomeController {
         responseMap.put("result", false);
 
         try {
-            String beforeData = ((String) combineParams.get("beforeData"));
+            String beforeData = (String) combineParams.get("beforeData");
 
             // Extract the query from the log
             String query = queryUtils.extractQueryFromLog(beforeData);
@@ -118,6 +109,8 @@ public class HomeController {
 
             // Replace the placeholders with the actual parameters
             String formattedQuery = queryUtils.replacePlaceholders(query, params);
+
+            logger.info("\nComplete Query : [{}]\n", formattedQuery);
 
             responseMap.put("result", true);
             responseMap.put("completeQuery", formattedQuery);

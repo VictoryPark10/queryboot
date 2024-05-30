@@ -9,6 +9,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueryUtils {
 
+    public String[] getMyBatisParameters(String[] dummy2) {
+        String beforeParams = dummy2[1].trim();
+
+        beforeParams = beforeParams.replaceAll(System.lineSeparator(), "");
+        beforeParams = beforeParams.replaceAll("\\(String\\), ", "(String)^")
+            .replaceAll("\\(Integer\\), ", "(Integer)^")
+            .replaceAll("\\(Long\\), ", "(Long)^")
+            .replaceAll("null, ", "null^");
+
+        return beforeParams.split("\\^");
+    }
+
     /**
      * Extracts the query from the Hibernate log.
      *
